@@ -1,7 +1,7 @@
 import { connect } from "mongoose";
 
 const connectDB = async () => {
-  return await connect("mongodb+srv://TestHanan123:TestHanan123@test.xnjv9io.mongodb.net/Test")//process.env.DB_LOCAL
+  return await connect(process.env.DB_LOCAL)
     .then(() => {
       console.log("Connecting to Database...");
     })
