@@ -7,13 +7,13 @@ export const signup = async (req, res) => {
     const { userName, email, password } = req.body;
     let user = await userModel.findOne({ email });
     if (user) {
-      return res.status(500).json("Email exists");
+      return res.status(500).json({ message: "Email exists" });
     }
     const hashedPassword = bcrypt.hashSync(
       password,
       parseInt(process.env.SALTROUND)
     );
-    const token = JsonWebTokenError.sign({ email }, process.env.SIGN_UP_SECRET);
+    const token = jwt.sign({ email }, process.env.SIGN_UP_SECRET);
 
     user = await userModel.create({
       userName,
@@ -33,7 +33,7 @@ export const login = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    const match = bcrypt.compare(password, user.password);
+    const match = await bcrypt.compare(password, user.password);
     if (!match) {
       return res.status(404).json({ message: "Password does not match" });
     }
